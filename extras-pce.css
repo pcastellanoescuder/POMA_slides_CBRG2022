@@ -1,0 +1,136 @@
+
+/*FONTS*/
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@300&display=swap');
+
+body {
+  font-family: 'Roboto Slab', serif;
+}
+
+/*FONT SIZE*/
+
+.remark-slide-content h1 {
+    font-size: 2em;
+    /*padding: 1em 4em 1em 4em;*/
+}
+
+.remark-slide-content h2 {
+    font-size: 1.5em;
+}
+
+.remark-slide-content h3 {
+    font-size: 1.17em;
+}
+
+.remark-slide-content h4 {
+    font-size: 1em;
+}
+
+.remark-slide-content p, body, code {
+    font-size: 1em;
+}
+
+/*TITLE SLIDE TEXT AND LOGOS*/
+
+.title-slide {
+  background-color: #FFFFFF;
+  border-top: 80px solid #FFFFFF;
+  /*background-image: url("img/duke_mol.png"), url("img/duke_uni.png"), url("img/hirschey_lab.png");
+  background-position: 10% 5%, 50% 5%, 82% 3%; 
+  background-size: 28%, 21%, 12%;*/
+}
+
+.title-slide > h1  {
+  color: #003366;
+  text-shadow: none;
+  text-align: left;
+  font-weight: bold;
+  padding-top: 25%;
+}
+
+.title-slide > h2  {
+  color: #003366;
+  text-shadow: none;
+  font-weight: 300;
+  text-align: left;
+}
+
+.title-slide > h3  {
+  color: #003366;
+  text-shadow: none;
+  text-align: left;
+  font-weight: 300;
+}
+
+hr, .title-slide h2::after, .mline h1::after {
+  content: '';
+  display: block;
+  border: none;
+  background-color: #EB811B;
+  color: #EB811B;
+  height: 1px;
+}
+
+hr, .mline h1::after {
+  margin: 1em 15px 0 15px;
+}
+
+.title-slide h2::after {
+  margin: 10px 15px 35px 0;
+}
+
+.mline h1::after {
+  margin: 10px 15px 0 15px;
+}
+
+/*SLIDE NUMBERS*/
+
+.title-slide .remark-slide-number {
+  display: none;
+}
+
+.remark-slide-number {
+  color: #003366;
+}
+
+.inverse .remark-slide-number {
+  color: #FFFFFF;
+}
+
+/*TEXT STYLE*/
+
+.green {
+  color: green;
+}
+
+.red {
+  color: red;
+}
+
+.white {
+  color: white;
+}
+
+.footnote2 {
+  position: absolute;
+  bottom: 1em;
+  font-style: italic;
+  font-size: 70%;
+  border-top: 1px solid black;
+  font-style: italic;
+}
+
+.pull-left {
+  float: left;
+  width: 47%;
+}
+
+.pull-right {
+  float: right;
+  width: 47%;
+}
+
+.pull-right + * {
+  clear: both;
+}
+

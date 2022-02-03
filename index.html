@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>POMA: A User-friendly Workflow for Omics Data Analysis</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Pol Castellano-Escuder" />
+    <script src="libs/header-attrs-2.11/header-attrs.js"></script>
+    <link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+    <link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+    <script src="libs/kePrint-0.0.1/kePrint.js"></script>
+    <link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+    <link rel="stylesheet" href="duke-blue-pce.css" type="text/css" />
+    <link rel="stylesheet" href="hygge-duke-pce.css" type="text/css" />
+    <link rel="stylesheet" href="extras-pce.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# <strong>POMA</strong>: <em>A User-friendly Workflow for Omics Data
+Analysis</em>
+## Computational Biology Reading Group
+### <strong>Pol Castellano-Escuder</strong>
+### DMPI, Duke University
+### Jan 9, 2022
+
+---
+
+
+layout: true
+
+&lt;!-- &lt;div class="my-header"&gt;&lt;img src="img/logo.png" alt="logo" align="right" height="90%"&gt;&lt;/div&gt; --&gt;
+
+&lt;!-- &lt;div class="my-footer"&gt;&lt;span&gt; --&gt;
+&lt;!-- &lt;a href="https://twitter.com/polcastellano_" style="color:white"&gt;@polcastellano_&lt;/a&gt; --&gt;
+&lt;!-- &amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp; --&gt;
+&lt;!-- POMA --&gt;
+&lt;!-- &lt;/span&gt;&lt;/div&gt; --&gt;
+
+
+
+
+
+---
+
+# Outline
+
+.columnwide[
+  ### 1) Scope of the package
+  ### 2) POMA workflow (with examples)
+  ### 3) POMAShiny
+  ### 4) Summary
+]
+
+.columnnarrow[
+
+&lt;img align = "left" src="https://github.com/pcastellanoescuder/POMA/raw/master/man/figures/logo.png" height="170"&gt;
+]
+
+---
+
+# Scope of POMA
+
+.center[
+.textboxorange[`POMA` package focuses on &lt;u&gt;**statistical analysis**&lt;/u&gt; of metabolomics and proteomics data]
+]
+
+--
+
+  1) Directly from sheet (xlsx, csv, etc.) &amp;#10060;&amp;#10060;
+  
+--
+  
+  2) Extracting quantitative data from Bioconductor objects (`MSnSet`, `SummarizedExperiment`, etc.) &amp;#10060;
+
+--
+
+  3) Using Bioconductor objects directly (++ reproducibility and interoperability) &amp;#9989;
+
+.center[
+figure1 
+]
+
+---
+
+# POMA workflow: 1) Data formatting
+
+.center[
+.textboxorange[The input format required in all `POMA` functions in a `SummarizedExperiment` object]
+]
+
+.pull-left[
+
+**Target or "_phenotype data_"**
+
+&lt;img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/target.png" height="200"&gt;
+
+]
+
+.pull-right[
+
+**Features or "_concentration data_"**
+
+&lt;img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/features.png" height="200"&gt;
+
+]
+
+&lt;br&gt;
+
+
+```r
+# create SummarizedExperiment object from target and features data frames
+msnset_object &lt;- PomaSummarizedExperiment(tatget = "target", 
+                                          features = "features")
+```
+
+---
+
+# POMA workflow: 2) Preprocessing
+
+.center[
+.textboxorange[All `POMA` preprocessing methods return a preprocessed `MSnSet` object]
+]
+
+### 2.1) Missing value imputation
+
+
+```r
+msnset_object %&gt;% 
+  PomaImpute(ZerosAsNA = FALSE, # treat zeros as zeros instead of NAs
+             RemoveNA = TRUE, cutoff = 20, # remove columns with &gt;20% of NA
+             method = "knn") # k-nearest neighbors (default)
+```
+
+--
+
+### 2.2) Normalization
+
+
+```r
+msnset_object %&gt;% 
+  PomaNorm(method = "log_pareto") # log Pareto scaling (default)
+```
+
+---
+
+# POMA workflow: 2) Preprocessing
+
+### 2.3) Outlier detection and cleaning
+
+.pull-left[
+
+Detection:
+
+
+```r
+msnset_object %&gt;% 
+*  PomaOutliers(do = "analyze")
+```
+
+Output:
+
+![](index_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+
+]
+
+.pull-right[
+
+Clean:
+
+
+```r
+msnset_object %&gt;% 
+*  PomaOutliers(do = "clean")
+```
+
+Output:
+
+A clean `MSnSet` object (without sample outliers)
+
+]
+
+---
+
+# POMA workflow: 2) Preprocessing
+
+&lt;u&gt;**Preprocessing output**:&lt;/u&gt;
+
+.center[
+&lt;img align = "center" src="img/pre_processing.png" height="400"&gt;
+]
+
+---
+
+# POMA workflow: 3) EDA
+
+.center[
+.textboxorange[Include several flexible visualization options such as boxplots, density plots, heatmaps, etc.]
+]
+
+### Boxplot examples:
+
+.pull-left[
+
+Display samples:
+
+
+
+
+```r
+clean_object %&gt;%
+* PomaBoxplots(group = "samples",
+               label_size = 5)
+```
+
+![](index_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+
+]
+
+.pull-right[
+
+Display features:
+
+
+```r
+clean_object %&gt;%
+* PomaBoxplots(group = "features")
+```
+
+![](index_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+
+]
+
+---
+
+# POMA workflow: 3) EDA
+
+### Boxplot examples:
+
+Display features of interest:
+
+
+```r
+clean_object %&gt;%
+  PomaBoxplots(group = "features",
+*              feature_name = c("isoleucine", "leucine", "lysine"))
+```
+
+&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+
+# POMA workflow: 4) Statistical analysis
+
+#### Statistical methods covered by `POMA`:
+
+--
+
+  - **Univariate analysis:** T-test, ANOVA, ANCOVA, Wilcoxon test, and Kruskal Wallis
+
+--
+
+  - **Multivariate analysis:** PCA, PLS-DA, and sPLS-DA
+
+--
+
+  - **Cluster analysis:** _k_-means (clusters projected in a MDS plot)
+
+--
+
+  - **Limma:** Both designs with and without covariates (from `limma` _Bioconductor_ package)
+
+--
+
+  - **Correlation analysis:** Pairwise correlations, correlogram, network correlations and Gaussian Graphical Models
+
+--
+
+  - **Regularization methods:** LASSO, Ridge, and Elasticnet (**allow train/test split**)
+
+--
+
+  - **Random forest:** Classical Random forest algorithm (**allow train/test split**)
+
+--
+
+  - **Rank products:** From `RankProd` _Bioconductor_ package
+
+--
+
+  - **Odds ratios:** Based on a logistic regression model (two-group analysis)
+
+---
+
+# POMA workflow: 4) Statistical analysis
+
+.center[
+All `POMA` functions are focused on &lt;u&gt;**simplifying and compacting**&lt;/u&gt; the analyses, grouping different methodologies of the same class within a single function instead of maintaining many "single purpose" functions
+]
+
+--
+
+.pull-left[
+
+**Univariate analysis: 1 function, 4 methods**
+
+
+```r
+clean_object %&gt;%
+  
+# parametric methods
+PomaUnivariate(method = "ttest")
+
+PomaUnivariate(method = "anova")
+
+# non-parametric methods
+PomaUnivariate(method = "mann")
+
+PomaUnivariate(method = "kruskal")
+```
+
+]
+
+--
+
+.pull-right[
+
+**Multivariate analysis: 1 function, 3 methods**
+
+
+```r
+clean_object %&gt;% 
+  
+PomaMultivariate(method = "pca")
+
+PomaMultivariate(method = "plsda")
+
+PomaMultivariate(method = "splsda")
+```
+
+]
+
+---
+
+# POMA workflow: 4) Statistical analysis
+
+.center[
+`POMA` predictive features allow users to split data into random _train_ and _test_ sets in order to perform an &lt;u&gt;**external cross-validation**&lt;/u&gt; (CV)
+]
+
+--
+
+.pull-left[
+
+LASSO for **feature selection**: All data used to create the model and no _test_ set created 
+
+
+```r
+clean_object %&gt;%
+  PomaLasso(alpha = 1, # LASSO
+*           ntest = NULL)
+```
+
+Ridge regression for **predictive modeling**: External CV using the 20% of the data as _test_ set
+
+
+```r
+clean_object %&gt;%
+  PomaLasso(alpha = 0, # Ridge
+*           ntest = 20)
+```
+
+]
+
+--
+
+.pull-right[
+
+Random forest for **predictive modeling**: External CV using the 20% of the data as _test_ set
+
+
+
+
+```r
+clean_object %&gt;%
+  PomaRandForest(ntree = 500,
+*                ntest = 20)
+```
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; 1 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 2 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; 3 &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; class.error &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3125 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6111 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+]
+
+---
+
+# POMA workflow: 4) Statistical analysis
+
+**"Top-down" example: From raw data to _limma_ model adjusted for covariates**
+
+
+
+
+```r
+raw_MSnSet_data %&gt;% 
+  PomaImpute(method = "knn") %&gt;%
+  PomaNorm(method = "log_pareto") %&gt;% 
+  PomaOutliers(do = "clean") %&gt;%
+* PomaLimma(contrast = "CRC-Polyp", covariates = TRUE)
+```
+
+&lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; feature &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; logFC &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; AveExpr &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; t &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; P.Value &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; adj.P.Val &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; B &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; lysine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.2669858 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0132740 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.561896 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0e-07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000093 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.611024 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; linolenic_acid &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.3703412 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0038798 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.367994 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.0e-07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000121 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.701319 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; glyceraldehyde &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3143264 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0020721 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.127753 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 7.0e-07 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000254 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.607997 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; dimethylglycine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.3455135 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0181250 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -5.045950 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0e-06 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000279 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.244478 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; methionine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.2224866 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0160721 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.693964 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.9e-06 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0001103 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.732799 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+---
+
+# POMAShiny
+
+.center[
+&lt;img align = "center" src="img/pomashiny.png" width="750"&gt;
+]
+
+&lt;a href="https://github.com/pcastellanoescuder/POMAShiny"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&amp;nbsp; https://github.com/pcastellanoescuder/POMAShiny&lt;/a&gt;
+&lt;br&gt;
+&lt;a href="https://webapps.nutrimetabolomics.com/POMAShiny"&gt;&lt;i class="fas fa-link"&gt;&lt;/i&gt;&amp;nbsp; https://webapps.nutrimetabolomics.com/POMAShiny&lt;/a&gt;
+
+---
+
+# Summary
+
+--
+
+.font130[
+  - POMA provides a &lt;span style="color:#f38620"&gt;**robust**&lt;/span&gt;, &lt;span style="color:#f38620"&gt;**reproducible**&lt;/span&gt;, and &lt;span style="color:#f38620"&gt;**user-friendly**&lt;/span&gt; workflow for the statistical analysis of metabolomics and proteomics data
+]
+
+--
+
+.font130[
+  - POMA allows users to include different &lt;span style="color:#f38620"&gt;**covariates**&lt;/span&gt; in the analysis
+]
+
+--
+
+.font130[
+  - POMA also provides its own interactive Shiny version called &lt;span style="color:#f38620"&gt;**POMAShiny**&lt;/span&gt;
+]
+
+--
+
+.font130[
+  - POMA is an &lt;span style="color:#f38620"&gt;**open source**&lt;/span&gt; tool and everybody is &lt;span style="color:#f38620"&gt;**welcome to contribute**&lt;/span&gt;!
+]
+
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+(function() {
+  "use strict"
+  // Replace <script> tags in slides area to make them executable
+  var scripts = document.querySelectorAll(
+    '.remark-slides-area .remark-slide-container script'
+  );
+  if (!scripts.length) return;
+  for (var i = 0; i < scripts.length; i++) {
+    var s = document.createElement('script');
+    var code = document.createTextNode(scripts[i].textContent);
+    s.appendChild(code);
+    var scriptAttrs = scripts[i].attributes;
+    for (var j = 0; j < scriptAttrs.length; j++) {
+      s.setAttribute(scriptAttrs[j].name, scriptAttrs[j].value);
+    }
+    scripts[i].parentElement.replaceChild(s, scripts[i]);
+  }
+})();
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
