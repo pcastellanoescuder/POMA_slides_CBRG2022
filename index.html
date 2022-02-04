@@ -3,7 +3,7 @@
   <head>
     <title>POMA: A User-friendly Workflow for Omics Data Analysis</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Pol Castellano-Escuder" />
+    <meta name="author" content="Pol Castellano-Escuder, Ph.D." />
     <script src="libs/header-attrs-2.11/header-attrs.js"></script>
     <link href="libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
     <link href="libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
@@ -20,49 +20,21 @@ class: center, middle, inverse, title-slide
 # <strong>POMA</strong>: <em>A User-friendly Workflow for Omics Data
 Analysis</em>
 ## Computational Biology Reading Group
-### <strong>Pol Castellano-Escuder</strong>
+### <strong>Pol Castellano-Escuder, Ph.D.</strong>
 ### DMPI, Duke University
 ### Jan 9, 2022
 
 ---
 
 
-layout: true
-
-&lt;!-- &lt;div class="my-header"&gt;&lt;img src="img/logo.png" alt="logo" align="right" height="90%"&gt;&lt;/div&gt; --&gt;
-
-&lt;!-- &lt;div class="my-footer"&gt;&lt;span&gt; --&gt;
-&lt;!-- &lt;a href="https://twitter.com/polcastellano_" style="color:white"&gt;@polcastellano_&lt;/a&gt; --&gt;
-&lt;!-- &amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp;&amp;emsp; --&gt;
-&lt;!-- POMA --&gt;
-&lt;!-- &lt;/span&gt;&lt;/div&gt; --&gt;
 
 
 
-
-
----
-
-# Outline
-
-.columnwide[
-  ### 1) Scope of the package
-  ### 2) POMA workflow (with examples)
-  ### 3) POMAShiny
-  ### 4) Summary
-]
-
-.columnnarrow[
-
-&lt;img align = "left" src="https://github.com/pcastellanoescuder/POMA/raw/master/man/figures/logo.png" height="170"&gt;
-]
-
----
 
 # Scope of POMA
 
 .center[
-.textboxorange[`POMA` package focuses on &lt;u&gt;**statistical analysis**&lt;/u&gt; of metabolomics and proteomics data]
+.textboxorange[`POMA` package focuses on &lt;u&gt;**statistical analysis**&lt;/u&gt; of omics data]
 ]
 
 --
@@ -71,7 +43,7 @@ layout: true
   
 --
   
-  2) Extracting quantitative data from Bioconductor objects (`MSnSet`, `SummarizedExperiment`, etc.) &amp;#10060;
+  2) Extracting quantitative data from Bioconductor objects (`MSnSet`, `QFeatures`, `SummarizedExperiment`, etc.) &amp;#10060;
 
 --
 
@@ -139,7 +111,7 @@ msnset_object %&gt;%
 
 ```r
 msnset_object %&gt;% 
-  PomaNorm(method = "log_pareto") # log Pareto scaling (default)
+  PomaNorm(method = "log_scaling") # (log10(x + 1) - mean(log10(x + 1)))/sd(log10(x + 1))
 ```
 
 ---
@@ -160,7 +132,7 @@ msnset_object %&gt;%
 
 Output:
 
-![](index_files/figure-html/unnamed-chunk-5-1.png)&lt;!-- --&gt;
+&lt;img src="img/unnamed-chunk-5-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -213,7 +185,7 @@ clean_object %&gt;%
                label_size = 5)
 ```
 
-![](index_files/figure-html/unnamed-chunk-8-1.png)&lt;!-- --&gt;
+&lt;img src="img/unnamed-chunk-8-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -227,7 +199,7 @@ clean_object %&gt;%
 * PomaBoxplots(group = "features")
 ```
 
-![](index_files/figure-html/unnamed-chunk-9-1.png)&lt;!-- --&gt;
+&lt;img src="img/unnamed-chunk-9-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -246,7 +218,7 @@ clean_object %&gt;%
 *              feature_name = c("isoleucine", "leucine", "lysine"))
 ```
 
-&lt;img src="index_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 

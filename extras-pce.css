@@ -134,3 +134,9 @@ hr, .mline h1::after {
   clear: both;
 }
 
+.textboxorange {
+  padding: 10px;
+  border: 2px solid orange;
+  margin: 0;
+}
+
