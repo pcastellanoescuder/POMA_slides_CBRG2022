@@ -1,5 +1,5 @@
 ---
-title: "**POMA**: _A User-friendly Workflow for Omics Data Analysis_" 
+title: "**POMA**: _User-friendly Workflow for Omics Data Analysis_" 
 subtitle: "Computational Biology Reading Group"
 author: "**Pol Castellano-Escuder, Ph.D.**"
 institute: "DMPI, Duke University"
@@ -26,7 +26,7 @@ htmltools::tagList(rmarkdown::html_dependency_font_awesome())
 opts_chunk$set(warning = FALSE, message = FALSE, 
                comment = "#>", fig.path = 'img/', fig.align = 'center', 
                fig.height = 8.5, out.width = '100%', fig.show = 'hold', 
-               fig.retina = 3, cache = TRUE, cache.path = 'cache/')
+               fig.retina = 3, cache = FALSE, cache.path = 'cache/')
 ```
 
 # Scope of POMA
@@ -79,8 +79,8 @@ figure1
 
 ```{r, eval = FALSE}
 # create SummarizedExperiment object from target and features data frames
-msnset_object <- PomaSummarizedExperiment(tatget = "target", 
-                                          features = "features")
+my_sum_exp <- PomaSummarizedExperiment(tatget = "target", 
+                                       features = "features")
 ```
 
 ---
@@ -88,13 +88,13 @@ msnset_object <- PomaSummarizedExperiment(tatget = "target",
 # POMA workflow: 2) Preprocessing
 
 .center[
-.textboxorange[All `POMA` preprocessing methods return a preprocessed `MSnSet` object]
+.textboxorange[All `POMA` preprocessing methods return a preprocessed `SummarizedExperiment` object]
 ]
 
 ### 2.1) Missing value imputation
 
 ```{r, eval = FALSE}
-msnset_object %>% 
+my_sum_exp %>% 
   PomaImpute(ZerosAsNA = FALSE, # treat zeros as zeros instead of NAs
              RemoveNA = TRUE, cutoff = 20, # remove columns with >20% of NA
              method = "knn") # k-nearest neighbors (default)
@@ -105,7 +105,7 @@ msnset_object %>%
 ### 2.2) Normalization
 
 ```{r, eval = FALSE}
-msnset_object %>% 
+my_sum_exp %>% 
   PomaNorm(method = "log_scaling") # (log10(x + 1) - mean(log10(x + 1)))/sd(log10(x + 1))
 ```
 
@@ -120,7 +120,7 @@ msnset_object %>%
 Detection:
 
 ```{r, eval = FALSE}
-msnset_object %>% 
+my_sum_exp %>% 
   {{PomaOutliers(do = "analyze")}}
 ```
 
@@ -128,15 +128,15 @@ Output:
 
 ```{r, echo = FALSE, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
 library(POMA)
-library(patchwork)
 library(ggplot2)
+library(patchwork)
 
-poma_outliers <- st000284 %>% 
-  PomaNorm() %>%
+my_sum_exp <- st000284 %>% 
+  PomaNorm(method = "log_scaling") %>%
   PomaOutliers(do = "analyze")
 
-poma_outliers$polygon_plot + theme(legend.position = "top") + scale_fill_viridis_d() + scale_color_viridis_d() | 
-  poma_outliers$distance_boxplot + theme(legend.position = "top") + scale_fill_viridis_d() + scale_color_viridis_d()
+my_sum_exp$polygon_plot + theme(legend.position = "top") | 
+  my_sum_exp$distance_boxplot + theme(legend.position = "top")
 ```
 
 ]
@@ -146,25 +146,36 @@ poma_outliers$polygon_plot + theme(legend.position = "top") + scale_fill_viridis
 Clean:
 
 ```{r, eval = FALSE}
-msnset_object %>% 
+clean_object <- my_sum_exp %>% 
   {{PomaOutliers(do = "clean")}}
 ```
 
 Output:
 
-A clean `MSnSet` object (without sample outliers)
+A clean `SummarizedExperiment` object (without sample outliers)
 
 ]
 
 ---
 
-# POMA workflow: 2) Preprocessing
+# `SummarizedExperiment` subsetting
 
-<u>**Preprocessing output**:</u>
+```{r, echo = FALSE}
+st000284
+```
 
-.center[
-<img align = "center" src="img/pre_processing.png" height="400">
-]
+--
+
+```{r, echo = FALSE}
+clean_object <- st000284 %>% 
+  PomaNorm(method = "log_scaling")
+
+clean_object <- clean_object[, clean_object$group %in% c("CRC", "Healthy")]
+```
+
+```{r}
+clean_object[, clean_object$group %in% c("CRC", "Healthy")]
+```
 
 ---
 
@@ -180,12 +191,6 @@ A clean `MSnSet` object (without sample outliers)
 
 Display samples:
 
-```{r, echo = FALSE, warning = FALSE, comment = FALSE, message = FALSE}
-clean_object <- st000336 %>% 
-  PomaImpute(method = "knn") %>%
-  PomaNorm(method = "log_pareto")
-```
-
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
 clean_object %>%
   PomaBoxplots(group = "samples", #<<
@@ -200,7 +205,8 @@ Display features:
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
 clean_object %>%
-  PomaBoxplots(group = "features") #<<
+  PomaBoxplots(group = "features", #<<
+               label_size = 5)
 ```
 
 ]
@@ -213,10 +219,10 @@ clean_object %>%
 
 Display features of interest:
 
-```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4, fig.align = "center"}
+```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 3.5}
 clean_object %>%
-  PomaBoxplots(group = "features",
-               feature_name = c("isoleucine", "leucine", "lysine")) #<<
+  PomaBoxplots(group = "features", jitter = TRUE, legend_position = "right",
+               feature_name = c("glyceraldehyde", "lysine", "linolenic_acid")) #<<
 ```
 
 ---
@@ -347,7 +353,7 @@ Random forest for **predictive modeling**: External CV using the 20% of the data
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, eval = TRUE, echo = FALSE}
 rf_res <- st000284 %>%
-  PomaNorm(method = "log_pareto") %>%
+  PomaNorm(method = "log_scaling") %>%
   PomaRandForest(ntest = 20)
 ```
 
@@ -373,7 +379,7 @@ kableExtra::kbl(rf_res$confusion_matrix, booktabs = TRUE) %>%
 ```{r, echo = FALSE, warning = FALSE, comment = FALSE, message = FALSE}
 poma_results <- st000284 %>% 
   PomaImpute(method = "knn") %>%
-  PomaNorm(method = "log_pareto") %>% 
+  PomaNorm(method = "log_scaling") %>% 
   PomaOutliers(do = "clean") %>%
   PomaLimma(contrast = "CRC-Polyp", covariates = TRUE)
 ```
@@ -381,7 +387,7 @@ poma_results <- st000284 %>%
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, eval = FALSE}
 raw_MSnSet_data %>% 
   PomaImpute(method = "knn") %>%
-  PomaNorm(method = "log_pareto") %>% 
+  PomaNorm(method = "log_scaling") %>% 
   PomaOutliers(do = "clean") %>%
   PomaLimma(contrast = "CRC-Polyp", covariates = TRUE) #<<
 ```

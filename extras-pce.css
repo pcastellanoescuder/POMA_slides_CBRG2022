@@ -34,16 +34,16 @@ body {
 
 .title-slide {
   background-color: #FFFFFF;
-  border-top: 80px solid #FFFFFF;
-  /*background-image: url("img/duke_mol.png"), url("img/duke_uni.png"), url("img/hirschey_lab.png");
-  background-position: 10% 5%, 50% 5%, 82% 3%; 
-  background-size: 28%, 21%, 12%;*/
+  /*border-top: 80px solid #FFFFFF;*/
+  background-image: url("img/duke_mol.png"), url("img/duke_uni.png");
+  background-position: 20% 10%, 80% 10%; 
+  background-size: 25%, 18%;
 }
 
 .title-slide > h1  {
   color: #003366;
   text-shadow: none;
-  text-align: left;
+  /*text-align: left;*/
   font-weight: bold;
   padding-top: 25%;
 }
@@ -52,13 +52,13 @@ body {
   color: #003366;
   text-shadow: none;
   font-weight: 300;
-  text-align: left;
+  /*text-align: left;*/
 }
 
 .title-slide > h3  {
   color: #003366;
   text-shadow: none;
-  text-align: left;
+  /*text-align: left;*/
   font-weight: 300;
 }
 
