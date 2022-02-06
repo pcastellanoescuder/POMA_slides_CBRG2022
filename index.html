@@ -178,13 +178,13 @@ A "clean" `SummarizedExperiment` object (without sample outliers)
 
 ```
 #&gt; class: SummarizedExperiment 
-#&gt; dim: 113 213 
+#&gt; dim: 113 224 
 #&gt; metadata(0):
 #&gt; assays(1): ''
 #&gt; rownames(113): x1_methyladenosine x1_methylhistamine ... xanthosine
 #&gt;   xanthurenate
 #&gt; rowData names(0):
-#&gt; colnames(213): sample_109 sample_11 ... sample_91 sample_99
+#&gt; colnames(224): sample_109 sample_11 ... sample_91 sample_99
 #&gt; colData names(5): group age_at_consent gender smoking_condition
 #&gt;   alcohol_consumption
 ```
@@ -197,6 +197,7 @@ A "clean" `SummarizedExperiment` object (without sample outliers)
 ```r
 clean_object[, clean_object$group %in% c("CRC", "Healthy")]
 ```
+
 
 ```
 #&gt; class: SummarizedExperiment 
@@ -226,7 +227,7 @@ clean_object %&gt;%
                label_size=5)
 ```
 
-&lt;img src="img/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -238,7 +239,7 @@ clean_object %&gt;%
 * PomaDensity(group="samples")
 ```
 
-&lt;img src="img/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -257,7 +258,7 @@ clean_object %&gt;%
                label_size=5)
 ```
 
-&lt;img src="img/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -269,7 +270,7 @@ clean_object %&gt;%
 * PomaDensity(group="features")
 ```
 
-&lt;img src="img/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ]
 
@@ -288,11 +289,11 @@ clean_object %&gt;%
 *                               "linolenic_acid"))
 ```
 
-&lt;img src="img/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
-# Heatmaps (with `ComplexHeatmap`)
+# Heatmap (with `ComplexHeatmap`)
 
 
 ```r
@@ -300,7 +301,7 @@ clean_object %&gt;%
   PomaHeatmap()
 ```
 
-&lt;img src="img/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-16-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -308,11 +309,13 @@ clean_object %&gt;%
 
 
 ```r
-library(plotly)
-
 clean_object %&gt;%
-  PomaVolcano(interactive = TRUE)
+    PomaVolcano(xlim = 2,
+              log2FC = 0.5,
+              labels = TRUE)
 ```
+
+&lt;img src="img/unnamed-chunk-18-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -464,22 +467,22 @@ clean_object %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.4211 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.6000 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.6667 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3158 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6364 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7857 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -500,7 +503,7 @@ raw_MSnSet_data %&gt;%
   PomaImpute(method = "knn") %&gt;%
   PomaNorm(method = "log_scaling") %&gt;% 
   PomaOutliers(do = "clean") %&gt;%
-* PomaLimma(contrast = "CRC-Polyp", covariates = TRUE)
+* PomaLimma(contrast = "CRC-Healthy", covariates = TRUE)
 ```
 
 &lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
@@ -517,49 +520,49 @@ raw_MSnSet_data %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; glyceraldehyde &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.8716410 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0025962 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 5.399625 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.0e-07 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.15e-05 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 7.273207 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; histidine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.7753701 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0137418 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.852442 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.70e-06 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0001102 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.739525 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; lysine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.8306274 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0433568 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -5.286142 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2.0e-07 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.15e-05 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 6.717572 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; glyceraldehyde &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7719673 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0025962 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.828592 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.00e-06 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0001102 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.633005 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; linolenic_acid &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.8261261 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.7182958 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.0063005 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -5.121343 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 5.0e-07 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.77e-05 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 5.928985 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.496105 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.00e-06 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0003405 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.196958 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; dimethylglycine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.7735402 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0345681 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.871740 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.6e-06 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.49e-05 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.776444 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; lysine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.6626916 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0433568 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.258334 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.56e-05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0007234 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.226784 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:left;"&gt; methionine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.7562908 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0473427 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.815094 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2.1e-06 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.70e-05 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.521984 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; glycochenodeoxycholate &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6532443 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.0540845 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.087601 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.25e-05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0011678 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.559836 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;

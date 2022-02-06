@@ -181,22 +181,27 @@ A "clean" `SummarizedExperiment` object (without sample outliers)
 # `SummarizedExperiment` subsetting
 
 ```{r, echo = FALSE}
-clean_object <- st000284 %>% 
-  PomaImpute(method = "knn") %>% 
-  PomaNorm(method = "log_scaling") %>% 
-  PomaOutliers(do = "clean")
-
-clean_object
+st000284 %>% 
+  PomaImpute(method = "knn")
 ```
 
 --
 
 ```{r, echo = FALSE}
-clean_object <- clean_object[, clean_object$group %in% c("CRC", "Healthy")]
+clean_object <- st000284[, st000284$factors %in% c("CRC", "Healthy")]
+
+clean_object <- clean_object %>% 
+  PomaImpute(method = "knn") %>% 
+  PomaNorm(method = "log_scaling") %>% 
+  PomaOutliers(do = "clean")
 ```
 
-```{r}
+```{r, eval = FALSE}
 clean_object[, clean_object$group %in% c("CRC", "Healthy")]
+```
+
+```{r, echo = FALSE}
+clean_object
 ```
 
 ---
@@ -276,9 +281,22 @@ clean_object %>%
 
 # Volcano plot
 
-```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
-# clean_object %>%
-#   PomaVolcano()
+```{r, eval = FALSE}
+clean_object %>%
+    PomaVolcano(xlim = 2,
+              log2FC = 0.5,
+              labels = TRUE)
+```
+
+```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4, echo = FALSE}
+clean_object2 <- st000284[, st000284$factors %in% c("CRC", "Healthy")]
+
+clean_object2 %>% 
+  PomaImpute(method = "knn") %>%
+  PomaOutliers(do = "clean") %>%
+  PomaVolcano(xlim = 2,
+              log2FC = 0.5,
+              labels = TRUE)
 ```
 
 ---
@@ -437,7 +455,7 @@ poma_results <- st000284 %>%
   PomaImpute(method = "knn") %>%
   PomaNorm(method = "log_scaling") %>% 
   PomaOutliers(do = "clean") %>%
-  PomaLimma(contrast = "CRC-Polyp", covariates = TRUE)
+  PomaLimma(contrast = "CRC-Healthy", covariates = TRUE)
 ```
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, eval = FALSE}
@@ -445,7 +463,7 @@ raw_MSnSet_data %>%
   PomaImpute(method = "knn") %>%
   PomaNorm(method = "log_scaling") %>% 
   PomaOutliers(do = "clean") %>%
-  PomaLimma(contrast = "CRC-Polyp", covariates = TRUE) #<<
+  PomaLimma(contrast = "CRC-Healthy", covariates = TRUE) #<<
 ```
 
 ```{r, echo = FALSE, warning = FALSE, comment = FALSE, message = FALSE}
