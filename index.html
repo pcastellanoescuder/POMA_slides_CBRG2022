@@ -17,8 +17,7 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# <strong>POMA</strong>: <em>User-friendly Workflow for Omics Data
-Analysis</em>
+# POMA: <em>User-friendly Workflow for Omics Data Analysis</em>
 ## Computational Biology Reading Group
 ### <strong>Pol Castellano-Escuder, Ph.D.</strong>
 ### DMPI, Duke University
@@ -31,10 +30,12 @@ Analysis</em>
 
 
 
-# Scope of POMA
+# Scope
 
 .center[
-.textboxorange[`POMA` package focuses on &lt;u&gt;**statistical analysis**&lt;/u&gt; of omics data]
+
+### `POMA` focuses on &lt;u&gt;**statistical analysis**&lt;/u&gt; of omics data
+
 ]
 
 --
@@ -43,27 +44,40 @@ Analysis</em>
   
 --
   
-  2) Extracting quantitative data from Bioconductor objects (`MSnSet`, `QFeatures`, `SummarizedExperiment`, etc.) &amp;#10060;
+  2) Extract quantitative data from Bioconductor objects (`MSnSet`, `QFeatures`, `SummarizedExperiment`, etc.) and format it &amp;#10060;
+
+.footnote2[
+
+Laurent Gatto, Omics Data Analysis; Chapter 8. [[Book]](https://uclouvain-cbio.github.io/WSBIM2122/sec-prot.html) &lt;/br&gt;
+Computational Biology Reading Group, Session 8. [[Project]](https://github.com/dukecct/CBRG/blob/main/inst/projects/08_project.Rmd) [[Slides]](https://github.com/dukecct/CBRG/blob/main/inst/slides/08_slides.Rmd) 
+
+]
 
 --
 
-  3) Using Bioconductor objects directly (++ reproducibility and interoperability) &amp;#9989;
+  3) Use Bioconductor objects directly (++ reproducibility and interoperability) &amp;#9989;
+  
+&lt;/br&gt;
 
 .center[
-figure1 
+
+&lt;img src="img/logo.png" height="180"&gt;
+
 ]
 
 ---
 
-# POMA workflow: 1) Data formatting
+# Data formatting
 
 .center[
-.textboxorange[The input format required in all `POMA` functions in a `SummarizedExperiment` object]
+
+### Input required in all `POMA` functions is a `SummarizedExperiment` object
+
 ]
 
 .pull-left[
 
-**Target or "_phenotype data_"**
+**Target** - `colData()`
 
 &lt;img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/target.png" height="200"&gt;
 
@@ -71,7 +85,7 @@ figure1
 
 .pull-right[
 
-**Features or "_concentration data_"**
+**Features** - `assay()`
 
 &lt;img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/features.png" height="200"&gt;
 
@@ -81,48 +95,53 @@ figure1
 
 
 ```r
-# create SummarizedExperiment object from target and features data frames
+# create SummarizedExperiment object from data frames
 my_sum_exp &lt;- PomaSummarizedExperiment(tatget = "target", 
                                        features = "features")
 ```
 
 ---
 
-# POMA workflow: 2) Preprocessing
+# Pre-processing...
 
 .center[
-.textboxorange[All `POMA` preprocessing methods return a preprocessed `SummarizedExperiment` object]
+
+### `POMA` pre-processing functions return a pre-processed `SummarizedExperiment` object
+
 ]
 
-### 2.1) Missing value imputation
+--
+
+## Missing value imputation
 
 
 ```r
 my_sum_exp %&gt;% 
-  PomaImpute(ZerosAsNA = FALSE, # treat zeros as zeros instead of NAs
-             RemoveNA = TRUE, cutoff = 20, # remove columns with &gt;20% of NA
-             method = "knn") # k-nearest neighbors (default)
+  PomaImpute(ZerosAsNA = FALSE, # treat zeros as zeros
+             RemoveNA = TRUE, # remove features with...
+             cutoff = 20, # more than 20% of NAs
+             method = "knn") # up to 6 methods here!
 ```
 
 --
 
-### 2.2) Normalization
+## Normalization
 
 
 ```r
 my_sum_exp %&gt;% 
-  PomaNorm(method = "log_scaling") # (log10(x + 1) - mean(log10(x + 1)))/sd(log10(x + 1))
+  PomaNorm(method = "log_scaling") # up to 6 methods here!
 ```
 
 ---
 
-# POMA workflow: 2) Preprocessing
+# Some more pre-processing...
 
-### 2.3) Outlier detection and cleaning
+## Outlier detection and cleaning
 
 .pull-left[
 
-Detection:
+**Detection**:
 
 
 ```r
@@ -138,17 +157,17 @@ Output:
 
 .pull-right[
 
-Clean:
+**Cleaning**:
 
 
 ```r
-clean_object &lt;- my_sum_exp %&gt;% 
+my_sum_exp %&gt;% 
 *  PomaOutliers(do = "clean")
 ```
 
 Output:
 
-A clean `SummarizedExperiment` object (without sample outliers)
+A "clean" `SummarizedExperiment` object (without sample outliers)
 
 ]
 
@@ -159,14 +178,14 @@ A clean `SummarizedExperiment` object (without sample outliers)
 
 ```
 #&gt; class: SummarizedExperiment 
-#&gt; dim: 113 224 
+#&gt; dim: 113 213 
 #&gt; metadata(0):
 #&gt; assays(1): ''
 #&gt; rownames(113): x1_methyladenosine x1_methylhistamine ... xanthosine
 #&gt;   xanthurenate
 #&gt; rowData names(0):
-#&gt; colnames(224): sample_109 sample_11 ... sample_91 sample_99
-#&gt; colData names(5): factors age_at_consent gender smoking_condition
+#&gt; colnames(213): sample_109 sample_11 ... sample_91 sample_99
+#&gt; colData names(5): group age_at_consent gender smoking_condition
 #&gt;   alcohol_consumption
 ```
 
@@ -181,36 +200,30 @@ clean_object[, clean_object$group %in% c("CRC", "Healthy")]
 
 ```
 #&gt; class: SummarizedExperiment 
-#&gt; dim: 113 148 
+#&gt; dim: 113 140 
 #&gt; metadata(0):
 #&gt; assays(1): ''
 #&gt; rownames(113): x1_methyladenosine x1_methylhistamine ... xanthosine
 #&gt;   xanthurenate
 #&gt; rowData names(0):
-#&gt; colnames(148): sample_109 sample_11 ... sample_93 sample_98
+#&gt; colnames(140): sample_109 sample_11 ... sample_88 sample_98
 #&gt; colData names(5): group age_at_consent gender smoking_condition
 #&gt;   alcohol_consumption
 ```
 
 ---
 
-# POMA workflow: 3) EDA
+# Let's explore the data before stats!
 
-.center[
-.textboxorange[Include several flexible visualization options such as boxplots, density plots, heatmaps, etc.]
-]
-
-### Boxplot examples:
+## Samples
 
 .pull-left[
-
-Display samples:
 
 
 ```r
 clean_object %&gt;%
-* PomaBoxplots(group = "samples",
-               label_size = 5)
+* PomaBoxplots(group="samples",
+               label_size=5)
 ```
 
 &lt;img src="img/unnamed-chunk-10-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -219,13 +232,10 @@ clean_object %&gt;%
 
 .pull-right[
 
-Display features:
-
 
 ```r
 clean_object %&gt;%
-* PomaBoxplots(group = "features",
-               label_size = 5)
+* PomaDensity(group="samples")
 ```
 
 &lt;img src="img/unnamed-chunk-11-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -234,20 +244,75 @@ clean_object %&gt;%
 
 ---
 
-# POMA workflow: 3) EDA
+# Let's explore the data before stats!
 
-### Boxplot examples:
+## Features
 
-Display features of interest:
+.pull-left[
 
 
 ```r
 clean_object %&gt;%
-  PomaBoxplots(group = "features", jitter = TRUE, legend_position = "right",
-*              feature_name = c("glyceraldehyde", "lysine", "linolenic_acid"))
+* PomaBoxplots(group="features",
+               label_size=5)
 ```
 
 &lt;img src="img/unnamed-chunk-12-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+.pull-right[
+
+
+```r
+clean_object %&gt;%
+* PomaDensity(group="features")
+```
+
+&lt;img src="img/unnamed-chunk-13-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+]
+
+---
+
+# Features of interest
+
+
+```r
+clean_object %&gt;%
+  PomaBoxplots(group = "features", 
+               jitter = TRUE,
+               legend_position = "right",
+               feature_name = c("glyceraldehyde", 
+                                "lysine", 
+*                               "linolenic_acid"))
+```
+
+&lt;img src="img/unnamed-chunk-14-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Heatmaps (with `ComplexHeatmap`)
+
+
+```r
+clean_object %&gt;%
+  PomaHeatmap()
+```
+
+&lt;img src="img/unnamed-chunk-15-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
+# Volcano plot
+
+
+```r
+library(plotly)
+
+clean_object %&gt;%
+  PomaVolcano(interactive = TRUE)
+```
 
 ---
 
@@ -399,22 +464,22 @@ clean_object %&gt;%
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.3571 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 12 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.2500 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 7 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.5000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4211 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6000 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6667 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;

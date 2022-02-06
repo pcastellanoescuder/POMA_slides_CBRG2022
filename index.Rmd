@@ -1,5 +1,5 @@
 ---
-title: "**POMA**: _User-friendly Workflow for Omics Data Analysis_" 
+title: "POMA: _User-friendly Workflow for Omics Data Analysis_" 
 subtitle: "Computational Biology Reading Group"
 author: "**Pol Castellano-Escuder, Ph.D.**"
 institute: "DMPI, Duke University"
@@ -29,10 +29,12 @@ opts_chunk$set(warning = FALSE, message = FALSE,
                fig.retina = 3, cache = FALSE, cache.path = 'cache/')
 ```
 
-# Scope of POMA
+# Scope
 
 .center[
-.textboxorange[`POMA` package focuses on <u>**statistical analysis**</u> of omics data]
+
+### `POMA` focuses on <u>**statistical analysis**</u> of omics data
+
 ]
 
 --
@@ -41,27 +43,40 @@ opts_chunk$set(warning = FALSE, message = FALSE,
   
 --
   
-  2) Extracting quantitative data from Bioconductor objects (`MSnSet`, `QFeatures`, `SummarizedExperiment`, etc.) &#10060;
+  2) Extract quantitative data from Bioconductor objects (`MSnSet`, `QFeatures`, `SummarizedExperiment`, etc.) and format it &#10060;
+
+.footnote2[
+
+Laurent Gatto, Omics Data Analysis; Chapter 8. [[Book]](https://uclouvain-cbio.github.io/WSBIM2122/sec-prot.html) </br>
+Computational Biology Reading Group, Session 8. [[Project]](https://github.com/dukecct/CBRG/blob/main/inst/projects/08_project.Rmd) [[Slides]](https://github.com/dukecct/CBRG/blob/main/inst/slides/08_slides.Rmd) 
+
+]
 
 --
 
-  3) Using Bioconductor objects directly (++ reproducibility and interoperability) &#9989;
+  3) Use Bioconductor objects directly (++ reproducibility and interoperability) &#9989;
+  
+</br>
 
 .center[
-figure1 
+
+<img src="img/logo.png" height="180">
+
 ]
 
 ---
 
-# POMA workflow: 1) Data formatting
+# Data formatting
 
 .center[
-.textboxorange[The input format required in all `POMA` functions in a `SummarizedExperiment` object]
+
+### Input required in all `POMA` functions is a `SummarizedExperiment` object
+
 ]
 
 .pull-left[
 
-**Target or "_phenotype data_"**
+**Target** - `colData()`
 
 <img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/target.png" height="200">
 
@@ -69,7 +84,7 @@ figure1
 
 .pull-right[
 
-**Features or "_concentration data_"**
+**Features** - `assay()`
 
 <img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/features.png" height="200">
 
@@ -78,46 +93,51 @@ figure1
 <br>
 
 ```{r, eval = FALSE}
-# create SummarizedExperiment object from target and features data frames
+# create SummarizedExperiment object from data frames
 my_sum_exp <- PomaSummarizedExperiment(tatget = "target", 
                                        features = "features")
 ```
 
 ---
 
-# POMA workflow: 2) Preprocessing
+# Pre-processing...
 
 .center[
-.textboxorange[All `POMA` preprocessing methods return a preprocessed `SummarizedExperiment` object]
+
+### `POMA` pre-processing functions return a pre-processed `SummarizedExperiment` object
+
 ]
 
-### 2.1) Missing value imputation
+--
+
+## Missing value imputation
 
 ```{r, eval = FALSE}
 my_sum_exp %>% 
-  PomaImpute(ZerosAsNA = FALSE, # treat zeros as zeros instead of NAs
-             RemoveNA = TRUE, cutoff = 20, # remove columns with >20% of NA
-             method = "knn") # k-nearest neighbors (default)
+  PomaImpute(ZerosAsNA = FALSE, # treat zeros as zeros
+             RemoveNA = TRUE, # remove features with...
+             cutoff = 20, # more than 20% of NAs
+             method = "knn") # up to 6 methods here!
 ```
 
 --
 
-### 2.2) Normalization
+## Normalization
 
 ```{r, eval = FALSE}
 my_sum_exp %>% 
-  PomaNorm(method = "log_scaling") # (log10(x + 1) - mean(log10(x + 1)))/sd(log10(x + 1))
+  PomaNorm(method = "log_scaling") # up to 6 methods here!
 ```
 
 ---
 
-# POMA workflow: 2) Preprocessing
+# Some more pre-processing...
 
-### 2.3) Outlier detection and cleaning
+## Outlier detection and cleaning
 
 .pull-left[
 
-Detection:
+**Detection**:
 
 ```{r, eval = FALSE}
 my_sum_exp %>% 
@@ -143,16 +163,16 @@ my_sum_exp$polygon_plot + theme(legend.position = "top") |
 
 .pull-right[
 
-Clean:
+**Cleaning**:
 
 ```{r, eval = FALSE}
-clean_object <- my_sum_exp %>% 
+my_sum_exp %>% 
   {{PomaOutliers(do = "clean")}}
 ```
 
 Output:
 
-A clean `SummarizedExperiment` object (without sample outliers)
+A "clean" `SummarizedExperiment` object (without sample outliers)
 
 ]
 
@@ -161,15 +181,17 @@ A clean `SummarizedExperiment` object (without sample outliers)
 # `SummarizedExperiment` subsetting
 
 ```{r, echo = FALSE}
-st000284
+clean_object <- st000284 %>% 
+  PomaImpute(method = "knn") %>% 
+  PomaNorm(method = "log_scaling") %>% 
+  PomaOutliers(do = "clean")
+
+clean_object
 ```
 
 --
 
 ```{r, echo = FALSE}
-clean_object <- st000284 %>% 
-  PomaNorm(method = "log_scaling")
-
 clean_object <- clean_object[, clean_object$group %in% c("CRC", "Healthy")]
 ```
 
@@ -179,50 +201,84 @@ clean_object[, clean_object$group %in% c("CRC", "Healthy")]
 
 ---
 
-# POMA workflow: 3) EDA
+# Let's explore the data before stats!
 
-.center[
-.textboxorange[Include several flexible visualization options such as boxplots, density plots, heatmaps, etc.]
-]
-
-### Boxplot examples:
+## Samples
 
 .pull-left[
 
-Display samples:
-
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
 clean_object %>%
-  PomaBoxplots(group = "samples", #<<
-               label_size = 5)
+  PomaBoxplots(group="samples", #<<
+               label_size=5)
 ```
 
 ]
 
 .pull-right[
 
-Display features:
-
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
 clean_object %>%
-  PomaBoxplots(group = "features", #<<
-               label_size = 5)
+  PomaDensity(group="samples") #<<
 ```
 
 ]
 
 ---
 
-# POMA workflow: 3) EDA
+# Let's explore the data before stats!
 
-### Boxplot examples:
+## Features
 
-Display features of interest:
+.pull-left[
 
-```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 3.5}
+```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
 clean_object %>%
-  PomaBoxplots(group = "features", jitter = TRUE, legend_position = "right",
-               feature_name = c("glyceraldehyde", "lysine", "linolenic_acid")) #<<
+  PomaBoxplots(group="features", #<<
+               label_size=5)
+```
+
+]
+
+.pull-right[
+
+```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
+clean_object %>%
+  PomaDensity(group="features") #<<
+```
+
+]
+
+---
+
+# Features of interest
+
+```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 3.4}
+clean_object %>%
+  PomaBoxplots(group = "features", 
+               jitter = TRUE,
+               legend_position = "right",
+               feature_name = c("glyceraldehyde", 
+                                "lysine", 
+                                "linolenic_acid")) #<<
+```
+
+---
+
+# Heatmap (with `ComplexHeatmap`)
+
+```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
+clean_object %>%
+  PomaHeatmap()
+```
+
+---
+
+# Volcano plot
+
+```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4}
+# clean_object %>%
+#   PomaVolcano()
 ```
 
 ---
