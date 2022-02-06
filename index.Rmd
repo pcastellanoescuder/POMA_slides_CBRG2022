@@ -301,52 +301,34 @@ clean_object2 %>%
 
 ---
 
-# POMA workflow: 4) Statistical analysis
-
-#### Statistical methods covered by `POMA`:
-
---
+# Finally, STATS!
 
   - **Univariate analysis:** T-test, ANOVA, ANCOVA, Wilcoxon test, and Kruskal Wallis
 
---
-
   - **Multivariate analysis:** PCA, PLS-DA, and sPLS-DA
 
---
+  - **Cluster analysis:** _k_-means (so far...)
 
-  - **Cluster analysis:** _k_-means (clusters projected in a MDS plot)
-
---
-
-  - **Limma:** Both designs with and without covariates (from `limma` _Bioconductor_ package)
-
---
+  - **Limma:** Both designs with and without covariates
 
   - **Correlation analysis:** Pairwise correlations, correlogram, network correlations and Gaussian Graphical Models
 
---
+  - **Regularization methods:** LASSO, Ridge, and Elasticnet (**allowing external CV**)
 
-  - **Regularization methods:** LASSO, Ridge, and Elasticnet (**allow train/test split**)
-
---
-
-  - **Random forest:** Classical Random forest algorithm (**allow train/test split**)
-
---
+  - **Random forest:** Classical Random forest algorithm (**allowing external CV**)
 
   - **Rank products:** From `RankProd` _Bioconductor_ package
-
---
 
   - **Odds ratios:** Based on a logistic regression model (two-group analysis)
 
 ---
 
-# POMA workflow: 4) Statistical analysis
+# Simple & Compact
 
 .center[
-All `POMA` functions are focused on <u>**simplifying and compacting**</u> the analyses, grouping different methodologies of the same class within a single function instead of maintaining many "single purpose" functions
+
+### `POMA` functions are focused on <u>**simplifying and compacting**</u> the analyses, grouping different methodologies of the same class within a single function instead of maintaining several "single purpose" functions
+
 ]
 
 --
@@ -391,10 +373,12 @@ PomaMultivariate(method = "splsda")
 
 ---
 
-# POMA workflow: 4) Statistical analysis
+# External cross-validation
 
 .center[
-`POMA` predictive features allow users to split data into random _train_ and _test_ sets in order to perform an <u>**external cross-validation**</u> (CV)
+
+### `POMA` predictive features allow users to split data into random _train_ and _test_ sets to perform an <u>**external cross-validation**</u> (CV)
+
 ]
 
 --
@@ -426,9 +410,9 @@ clean_object %>%
 Random forest for **predictive modeling**: External CV using the 20% of the data as _test_ set
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, eval = TRUE, echo = FALSE}
-rf_res <- st000284 %>%
-  PomaNorm(method = "log_scaling") %>%
-  PomaRandForest(ntest = 20)
+rf_res <- clean_object %>% 
+  PomaRandForest(ntree = 500,
+                 ntest = 20)
 ```
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, eval = FALSE}
@@ -438,7 +422,12 @@ clean_object %>%
 ```
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, eval = TRUE, echo = FALSE}
-kableExtra::kbl(rf_res$confusion_matrix, booktabs = TRUE) %>%
+rf_cf <- rf_res$confusion_matrix
+rownames(rf_cf) <- c("CRC", "Healthy")
+colnames(rf_cf) <- c("CRC", "Healthy", "Error") 
+  
+rf_cf %>% 
+  kableExtra::kbl(booktabs = TRUE, row.names = TRUE) %>%
   kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
 ```
 
@@ -446,9 +435,17 @@ kableExtra::kbl(rf_res$confusion_matrix, booktabs = TRUE) %>%
 
 ---
 
-# POMA workflow: 4) Statistical analysis
+# Covariates
 
-**"Top-down" example: From raw data to _limma_ model adjusted for covariates**
+---
+
+# Use case
+
+.center[
+
+### From raw data to a _limma_ adjusted model, in 4 lines of code! `r emo::ji("scream")`
+
+]
 
 ```{r, echo = FALSE, warning = FALSE, comment = FALSE, message = FALSE}
 poma_results <- st000284 %>% 
@@ -459,7 +456,7 @@ poma_results <- st000284 %>%
 ```
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, eval = FALSE}
-raw_MSnSet_data %>% 
+my_sum_exp %>% 
   PomaImpute(method = "knn") %>%
   PomaNorm(method = "log_scaling") %>% 
   PomaOutliers(do = "clean") %>%
@@ -467,9 +464,13 @@ raw_MSnSet_data %>%
 ```
 
 ```{r, echo = FALSE, warning = FALSE, comment = FALSE, message = FALSE}
-kableExtra::kbl(poma_results[1:5 ,], booktabs = TRUE) %>%
+kableExtra::kbl(poma_results %>% 
+                  dplyr::mutate_at(vars("logFC", "AveExpr", "t", "B"), ~ round(., 3)) %>% 
+                  dplyr::slice(1L:8L), booktabs = TRUE) %>%
   kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
 ```
+
+.center[**...**]
 
 ---
 
@@ -480,8 +481,6 @@ kableExtra::kbl(poma_results[1:5 ,], booktabs = TRUE) %>%
 ]
 
 <a href="https://github.com/pcastellanoescuder/POMAShiny"><i class="fab fa-github"></i>&nbsp; https://github.com/pcastellanoescuder/POMAShiny</a>
-<br>
-<a href="https://webapps.nutrimetabolomics.com/POMAShiny"><i class="fas fa-link"></i>&nbsp; https://webapps.nutrimetabolomics.com/POMAShiny</a>
 
 ---
 

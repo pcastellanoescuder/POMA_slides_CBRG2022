@@ -319,52 +319,34 @@ clean_object %&gt;%
 
 ---
 
-# POMA workflow: 4) Statistical analysis
-
-#### Statistical methods covered by `POMA`:
-
---
+# Finally, STATS!
 
   - **Univariate analysis:** T-test, ANOVA, ANCOVA, Wilcoxon test, and Kruskal Wallis
 
---
-
   - **Multivariate analysis:** PCA, PLS-DA, and sPLS-DA
 
---
+  - **Cluster analysis:** _k_-means (so far...)
 
-  - **Cluster analysis:** _k_-means (clusters projected in a MDS plot)
-
---
-
-  - **Limma:** Both designs with and without covariates (from `limma` _Bioconductor_ package)
-
---
+  - **Limma:** Both designs with and without covariates
 
   - **Correlation analysis:** Pairwise correlations, correlogram, network correlations and Gaussian Graphical Models
 
---
+  - **Regularization methods:** LASSO, Ridge, and Elasticnet (**allowing external CV**)
 
-  - **Regularization methods:** LASSO, Ridge, and Elasticnet (**allow train/test split**)
-
---
-
-  - **Random forest:** Classical Random forest algorithm (**allow train/test split**)
-
---
+  - **Random forest:** Classical Random forest algorithm (**allowing external CV**)
 
   - **Rank products:** From `RankProd` _Bioconductor_ package
-
---
 
   - **Odds ratios:** Based on a logistic regression model (two-group analysis)
 
 ---
 
-# POMA workflow: 4) Statistical analysis
+# Simple &amp; Compact
 
 .center[
-All `POMA` functions are focused on &lt;u&gt;**simplifying and compacting**&lt;/u&gt; the analyses, grouping different methodologies of the same class within a single function instead of maintaining many "single purpose" functions
+
+### `POMA` functions are focused on &lt;u&gt;**simplifying and compacting**&lt;/u&gt; the analyses, grouping different methodologies of the same class within a single function instead of maintaining several "single purpose" functions
+
 ]
 
 --
@@ -411,10 +393,12 @@ PomaMultivariate(method = "splsda")
 
 ---
 
-# POMA workflow: 4) Statistical analysis
+# External cross-validation
 
 .center[
-`POMA` predictive features allow users to split data into random _train_ and _test_ sets in order to perform an &lt;u&gt;**external cross-validation**&lt;/u&gt; (CV)
+
+### `POMA` predictive features allow users to split data into random _train_ and _test_ sets to perform an &lt;u&gt;**external cross-validation**&lt;/u&gt; (CV)
+
 ]
 
 --
@@ -459,30 +443,24 @@ clean_object %&gt;%
 &lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
  &lt;thead&gt;
   &lt;tr&gt;
-   &lt;th style="text-align:right;"&gt; 1 &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; 2 &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; 3 &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; class.error &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; CRC &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Healthy &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; Error &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 13 &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; CRC &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.3158 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3333 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; Healthy &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.6364 &lt;/td&gt;
-  &lt;/tr&gt;
-  &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 0 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.7857 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1538 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -491,15 +469,23 @@ clean_object %&gt;%
 
 ---
 
-# POMA workflow: 4) Statistical analysis
+# Covariates
 
-**"Top-down" example: From raw data to _limma_ model adjusted for covariates**
+---
+
+# Use case
+
+.center[
+
+### From raw data to a _limma_ adjusted model, in 4 lines of code! 😱
+
+]
 
 
 
 
 ```r
-raw_MSnSet_data %&gt;% 
+my_sum_exp %&gt;% 
   PomaImpute(method = "knn") %&gt;%
   PomaNorm(method = "log_scaling") %&gt;% 
   PomaOutliers(do = "clean") %&gt;%
@@ -521,51 +507,80 @@ raw_MSnSet_data %&gt;%
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; histidine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.7753701 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0137418 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.852442 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.775 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.014 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.852 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.70e-06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0001102 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.739525 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.740 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; glyceraldehyde &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.7719673 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0025962 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.828592 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.772 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.003 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.829 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.00e-06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0001102 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.633005 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.633 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; linolenic_acid &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.7182958 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.0063005 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.496105 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.718 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.006 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.496 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 9.00e-06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0003405 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.196958 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.197 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; lysine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.6626916 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.0433568 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.258334 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.663 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.043 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.258 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.56e-05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0007234 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 2.226784 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 2.227 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; glycochenodeoxycholate &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.6532443 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.0540845 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.087601 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.653 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.054 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.088 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5.25e-05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0011678 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.559836 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.560 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; dimethylglycine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.636 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.035 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.047 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 6.20e-05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0011678 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.406 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; glutamine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.643 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.002 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.953 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.09e-05 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0014075 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.053 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; x2_deoxyuridine &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.626 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.011 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -3.901 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.12e-04 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0014075 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.860 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
+
+.center[**...**]
 
 ---
 
@@ -576,8 +591,6 @@ raw_MSnSet_data %&gt;%
 ]
 
 &lt;a href="https://github.com/pcastellanoescuder/POMAShiny"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&amp;nbsp; https://github.com/pcastellanoescuder/POMAShiny&lt;/a&gt;
-&lt;br&gt;
-&lt;a href="https://webapps.nutrimetabolomics.com/POMAShiny"&gt;&lt;i class="fas fa-link"&gt;&lt;/i&gt;&amp;nbsp; https://webapps.nutrimetabolomics.com/POMAShiny&lt;/a&gt;
 
 ---
 
