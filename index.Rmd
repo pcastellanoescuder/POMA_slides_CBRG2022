@@ -61,7 +61,7 @@ Computational Biology Reading Group, Session 8. [[Project]](https://github.com/d
 
 .center[
 
-<img src="img/logo.png" height="180">
+<img src="img/logo.png" height="170">
 
 ]
 
@@ -557,10 +557,16 @@ kableExtra::kbl(poma_results %>%
 # POMAShiny
 
 .center[
+
 <img align = "center" src="img/pomashiny.png" width="750">
+
 ]
 
 <a href="https://github.com/pcastellanoescuder/POMAShiny"><i class="fab fa-github"></i>&nbsp; https://github.com/pcastellanoescuder/POMAShiny</a>
+
+---
+
+# Video
 
 ---
 
@@ -569,24 +575,39 @@ kableExtra::kbl(poma_results %>%
 --
 
 .font130[
-  - POMA provides a <span style="color:#f38620">**robust**</span>, <span style="color:#f38620">**reproducible**</span>, and <span style="color:#f38620">**user-friendly**</span> workflow for the statistical analysis of metabolomics and proteomics data
+
+  - POMA provides a <span style="color:#f38620">**robust**</span>, <span style="color:#f38620">**reproducible**</span>, and <span style="color:#f38620">**user-friendly**</span> workflow for omics data analysis
+  
 ]
 
 --
 
 .font130[
-  - POMA allows users to include different <span style="color:#f38620">**covariates**</span> in the analysis
+
+  - POMA allows easy use <span style="color:#f38620">**covariates**</span> in the analysis
+  
 ]
 
 --
 
 .font130[
-  - POMA also provides its own interactive Shiny version called <span style="color:#f38620">**POMAShiny**</span>
+
+  - <span style="color:#f38620">**POMAShiny**</span> is the interactive Shiny application of POMA 
+  
 ]
 
 --
 
 .font130[
-  - POMA is an <span style="color:#f38620">**open source**</span> tool and everybody is <span style="color:#f38620">**welcome to contribute**</span>!
+
+  - POMA and POMAShiny are <span style="color:#f38620">**open source**</span> tools and everybody is <span style="color:#f38620">**welcome to contribute**</span>!
+  
+]
+
+--
+.center[
+
+<img src="img/questions.jpeg" height="250">
+
 ]
 
