@@ -311,8 +311,8 @@ clean_object %&gt;%
 ```r
 clean_object %&gt;%
     PomaVolcano(xlim = 2,
-              log2FC = 0.5,
-              labels = TRUE)
+                log2FC = 0.5,
+                labels = TRUE)
 ```
 
 &lt;img src="img/unnamed-chunk-18-1.png" width="100%" style="display: block; margin: auto;" /&gt;
@@ -454,13 +454,13 @@ clean_object %&gt;%
    &lt;td style="text-align:left;"&gt; CRC &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 10 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.3333 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.33 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; Healthy &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 11 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.1538 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.15 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
@@ -470,6 +470,31 @@ clean_object %&gt;%
 ---
 
 # Covariates
+
+
+
+
+```r
+clean_object %&gt;%
+  SummarizedExperiment::colData()
+```
+
+```
+#&gt; DataFrame with 140 rows and 4 columns
+#&gt;               group   gender smoking_condition alcohol_consumption
+#&gt;            &lt;factor&gt; &lt;factor&gt;          &lt;factor&gt;            &lt;factor&gt;
+#&gt; sample_109       45        1                 0                   2
+#&gt; sample_11        56        1                 1                   1
+#&gt; sample_115       53        0                 0                   2
+#&gt; sample_12        55        1                 0                   2
+#&gt; sample_122       55        0                 1                   1
+#&gt; ...             ...      ...               ...                 ...
+#&gt; sample_78        53        0                 0                   1
+#&gt; sample_79        61        1                 0                   2
+#&gt; sample_87        49        1                 2                   2
+#&gt; sample_88        46        0                 1                   1
+#&gt; sample_98        51        1                 1                   2
+```
 
 ---
 
@@ -489,7 +514,7 @@ my_sum_exp %&gt;%
   PomaImpute(method = "knn") %&gt;%
   PomaNorm(method = "log_scaling") %&gt;% 
   PomaOutliers(do = "clean") %&gt;%
-* PomaLimma(contrast = "CRC-Healthy", covariates = TRUE)
+* PomaLimma(contrast = "Healthy-CRC", covariates = TRUE)
 ```
 
 &lt;table class="table" style="margin-left: auto; margin-right: auto;"&gt;
@@ -507,72 +532,72 @@ my_sum_exp %&gt;%
 &lt;tbody&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; histidine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.775 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.775 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.014 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.852 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.852 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.70e-06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0001102 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4.740 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; glyceraldehyde &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.772 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.772 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.003 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.829 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.829 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.00e-06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0001102 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 4.633 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; linolenic_acid &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.718 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.718 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.006 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.496 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.496 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 9.00e-06 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0003405 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 3.197 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; lysine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.663 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.663 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.043 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.258 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.258 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.56e-05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0007234 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 2.227 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; glycochenodeoxycholate &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.653 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -0.653 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.054 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 4.088 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -4.088 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 5.25e-05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0011678 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.560 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; dimethylglycine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.636 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.636 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.035 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -4.047 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 4.047 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 6.20e-05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0011678 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.406 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; glutamine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.643 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.643 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.002 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -3.953 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.953 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 9.09e-05 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0014075 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.053 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
    &lt;td style="text-align:left;"&gt; x2_deoxyuridine &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -0.626 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.626 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; -0.011 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; -3.901 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 3.901 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 1.12e-04 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.0014075 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.860 &lt;/td&gt;

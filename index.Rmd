@@ -284,8 +284,8 @@ clean_object %>%
 ```{r, eval = FALSE}
 clean_object %>%
     PomaVolcano(xlim = 2,
-              log2FC = 0.5,
-              labels = TRUE)
+                log2FC = 0.5,
+                labels = TRUE)
 ```
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, fig.height = 4, echo = FALSE}
@@ -427,6 +427,7 @@ rownames(rf_cf) <- c("CRC", "Healthy")
 colnames(rf_cf) <- c("CRC", "Healthy", "Error") 
   
 rf_cf %>% 
+  dplyr::mutate(Error = round(Error, 2)) %>% 
   kableExtra::kbl(booktabs = TRUE, row.names = TRUE) %>%
   kableExtra::kable_styling(latex_options = c("striped", "scale_down"))
 ```
@@ -436,6 +437,27 @@ rf_cf %>%
 ---
 
 # Covariates
+
+```{r, warning = FALSE, comment = FALSE, message = FALSE, echo = FALSE}
+library(SummarizedExperiment)
+target <- SummarizedExperiment::colData(clean_object) %>% 
+  as.data.frame() %>% 
+  dplyr::mutate_at(vars(c("gender", "smoking_condition", "alcohol_consumption")), ~ as.factor(.)) %>% 
+  dplyr::mutate(age = as.numeric(age_at_consent)) %>% 
+  dplyr::select(age, gender, smoking_condition, alcohol_consumption) %>% 
+  tibble::rownames_to_column("ID") %>% 
+  as.data.frame()
+  
+assay_p <- SummarizedExperiment::assay(clean_object) %>% 
+  t()
+
+clean_object <- POMA::PomaSummarizedExperiment(target, assay_p)
+```
+
+```{r}
+clean_object %>%
+  SummarizedExperiment::colData()
+```
 
 ---
 
@@ -452,7 +474,7 @@ poma_results <- st000284 %>%
   PomaImpute(method = "knn") %>%
   PomaNorm(method = "log_scaling") %>% 
   PomaOutliers(do = "clean") %>%
-  PomaLimma(contrast = "CRC-Healthy", covariates = TRUE)
+  PomaLimma(contrast = "Healthy-CRC", covariates = TRUE)
 ```
 
 ```{r, warning = FALSE, comment = FALSE, message = FALSE, eval = FALSE}
@@ -460,7 +482,7 @@ my_sum_exp %>%
   PomaImpute(method = "knn") %>%
   PomaNorm(method = "log_scaling") %>% 
   PomaOutliers(do = "clean") %>%
-  PomaLimma(contrast = "CRC-Healthy", covariates = TRUE) #<<
+  PomaLimma(contrast = "Healthy-CRC", covariates = TRUE) #<<
 ```
 
 ```{r, echo = FALSE, warning = FALSE, comment = FALSE, message = FALSE}
