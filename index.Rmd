@@ -18,6 +18,7 @@ output:
 ```{r setup, include = FALSE}
 stopifnot(require(htmltools))
 stopifnot(require(knitr))
+library(tidyverse)
 ```
 
 ```{r htmltools, include = FALSE}
@@ -443,8 +444,10 @@ library(SummarizedExperiment)
 target <- SummarizedExperiment::colData(clean_object) %>% 
   as.data.frame() %>% 
   dplyr::mutate_at(vars(c("gender", "smoking_condition", "alcohol_consumption")), ~ as.factor(.)) %>% 
-  dplyr::mutate(age = as.numeric(age_at_consent)) %>% 
-  dplyr::select(age, gender, smoking_condition, alcohol_consumption) %>% 
+  dplyr::mutate(age_at_consent = as.numeric(age_at_consent)) %>% 
+  dplyr::rename(age = age_at_consent,
+                smoking = smoking_condition, 
+                alcohol = alcohol_consumption) %>% 
   tibble::rownames_to_column("ID") %>% 
   as.data.frame()
   
@@ -458,6 +461,61 @@ clean_object <- POMA::PomaSummarizedExperiment(target, assay_p)
 clean_object %>%
   SummarizedExperiment::colData()
 ```
+
+---
+
+# Let's adjust!
+
+<br>
+
+## ANOVA/ANCOVA
+
+```{r eval = FALSE}
+clean_object %>%
+  PomaUnivariate(method = "anova",
+                 covariates = TRUE, 
+                 covs = c("age", "gender"))
+```
+
+<br>
+
+$$feature \sim \beta_0 + age + gender + group$$
+---
+
+# Let's adjust!
+
+<br>
+
+## Limma
+
+```{r eval = FALSE}
+clean_object %>%
+  PomaLimma(contrast = "Healthy-CRC",
+            covariates = TRUE, 
+            covs = c("age", "smoking"))
+```
+
+<br>
+
+$$feature \sim \beta_0 + group + age + smoking$$
+
+---
+
+# Let's adjust!
+
+<br>
+
+## Odds Ratios (logistic regression)
+
+```{r eval = FALSE}
+clean_object %>%
+  PomaOddsRatio(covariates = TRUE, 
+                covs = c("smoking", "alcohol", "age"))
+```
+
+<br>
+
+$$group \sim \beta_0 + smoking + alcohol + age + \sum_{i=1}^p feature_i$$
 
 ---
 

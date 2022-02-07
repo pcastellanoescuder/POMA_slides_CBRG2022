@@ -480,21 +480,79 @@ clean_object %&gt;%
 ```
 
 ```
-#&gt; DataFrame with 140 rows and 4 columns
-#&gt;               group   gender smoking_condition alcohol_consumption
-#&gt;            &lt;factor&gt; &lt;factor&gt;          &lt;factor&gt;            &lt;factor&gt;
-#&gt; sample_109       45        1                 0                   2
-#&gt; sample_11        56        1                 1                   1
-#&gt; sample_115       53        0                 0                   2
-#&gt; sample_12        55        1                 0                   2
-#&gt; sample_122       55        0                 1                   1
-#&gt; ...             ...      ...               ...                 ...
-#&gt; sample_78        53        0                 0                   1
-#&gt; sample_79        61        1                 0                   2
-#&gt; sample_87        49        1                 2                   2
-#&gt; sample_88        46        0                 1                   1
-#&gt; sample_98        51        1                 1                   2
+#&gt; DataFrame with 140 rows and 5 columns
+#&gt;               group       age   gender  smoking  alcohol
+#&gt;            &lt;factor&gt; &lt;numeric&gt; &lt;factor&gt; &lt;factor&gt; &lt;factor&gt;
+#&gt; sample_109      CRC        45        1        0        2
+#&gt; sample_11       CRC        56        1        1        1
+#&gt; sample_115      CRC        53        0        0        2
+#&gt; sample_12       CRC        55        1        0        2
+#&gt; sample_122      CRC        55        0        1        1
+#&gt; ...             ...       ...      ...      ...      ...
+#&gt; sample_78   Healthy        53        0        0        1
+#&gt; sample_79   Healthy        61        1        0        2
+#&gt; sample_87   Healthy        49        1        2        2
+#&gt; sample_88   Healthy        46        0        1        1
+#&gt; sample_98   Healthy        51        1        1        2
 ```
+
+---
+
+# Let's adjust!
+
+&lt;br&gt;
+
+## ANOVA/ANCOVA
+
+
+```r
+clean_object %&gt;%
+  PomaUnivariate(method = "anova",
+                 covariates = TRUE, 
+                 covs = c("age", "gender"))
+```
+
+&lt;br&gt;
+
+`$$feature \sim \beta_0 + age + gender + group$$`
+---
+
+# Let's adjust!
+
+&lt;br&gt;
+
+## Limma
+
+
+```r
+clean_object %&gt;%
+  PomaLimma(contrast = "Healthy-CRC",
+            covariates = TRUE, 
+            covs = c("age", "smoking"))
+```
+
+&lt;br&gt;
+
+`$$feature \sim \beta_0 + group + age + smoking$$`
+
+---
+
+# Let's adjust!
+
+&lt;br&gt;
+
+## Odds Ratios (logistic regression)
+
+
+```r
+clean_object %&gt;%
+  PomaOddsRatio(covariates = TRUE, 
+                covs = c("smoking", "alcohol", "age"))
+```
+
+&lt;br&gt;
+
+`$$group \sim \beta_0 + smoking + alcohol + age + \sum_{i=1}^p feature_i$$`
 
 ---
 
