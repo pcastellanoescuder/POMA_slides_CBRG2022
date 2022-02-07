@@ -79,7 +79,7 @@ Computational Biology Reading Group, Session 8. [[Project]](https://github.com/d
 
 **Target** - `colData()`
 
-<img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/target.png" height="200">
+<img align = "left" src="img/target.png" height="200">
 
 ]
 
@@ -87,7 +87,7 @@ Computational Biology Reading Group, Session 8. [[Project]](https://github.com/d
 
 **Features** - `assay()`
 
-<img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/features.png" height="200">
+<img align = "left" src="img/features.png" height="200">
 
 ]
 
@@ -479,7 +479,7 @@ clean_object %>%
 
 <br>
 
-$$feature \sim \beta_0 + age + gender + group$$
+$$feature \sim \beta_0 + age + gender + group + \epsilon$$
 ---
 
 # Let's adjust!
@@ -497,7 +497,7 @@ clean_object %>%
 
 <br>
 
-$$feature \sim \beta_0 + group + age + smoking$$
+$$feature \sim \beta_0 + group + age + smoking + \epsilon$$
 
 ---
 
@@ -515,7 +515,7 @@ clean_object %>%
 
 <br>
 
-$$group \sim \beta_0 + smoking + alcohol + age + \sum_{i=1}^p feature_i$$
+$$group \sim \beta_0 + smoking + alcohol + age + \sum_{i=1}^p feature_i + \epsilon$$
 
 ---
 
@@ -558,15 +558,11 @@ kableExtra::kbl(poma_results %>%
 
 .center[
 
-<img align = "center" src="img/pomashiny.png" width="750">
+<iframe width="750" height="450" src="video/POMAShiny.mp4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ]
 
 <a href="https://github.com/pcastellanoescuder/POMAShiny"><i class="fab fa-github"></i>&nbsp; https://github.com/pcastellanoescuder/POMAShiny</a>
-
----
-
-# Video
 
 ---
 

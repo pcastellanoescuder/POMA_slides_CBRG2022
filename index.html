@@ -79,7 +79,7 @@ Computational Biology Reading Group, Session 8. [[Project]](https://github.com/d
 
 **Target** - `colData()`
 
-&lt;img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/target.png" height="200"&gt;
+&lt;img align = "left" src="img/target.png" height="200"&gt;
 
 ]
 
@@ -87,7 +87,7 @@ Computational Biology Reading Group, Session 8. [[Project]](https://github.com/d
 
 **Features** - `assay()`
 
-&lt;img align = "left" src="https://raw.github.com/pcastellanoescuder/POMAShiny/master/app/mds/pix/features.png" height="200"&gt;
+&lt;img align = "left" src="img/features.png" height="200"&gt;
 
 ]
 
@@ -514,7 +514,7 @@ clean_object %&gt;%
 
 &lt;br&gt;
 
-`$$feature \sim \beta_0 + age + gender + group$$`
+`$$feature \sim \beta_0 + age + gender + group + \epsilon$$`
 ---
 
 # Let's adjust!
@@ -533,7 +533,7 @@ clean_object %&gt;%
 
 &lt;br&gt;
 
-`$$feature \sim \beta_0 + group + age + smoking$$`
+`$$feature \sim \beta_0 + group + age + smoking + \epsilon$$`
 
 ---
 
@@ -552,7 +552,7 @@ clean_object %&gt;%
 
 &lt;br&gt;
 
-`$$group \sim \beta_0 + smoking + alcohol + age + \sum_{i=1}^p feature_i$$`
+`$$group \sim \beta_0 + smoking + alcohol + age + \sum_{i=1}^p feature_i + \epsilon$$`
 
 ---
 
@@ -671,15 +671,11 @@ my_sum_exp %&gt;%
 
 .center[
 
-&lt;img align = "center" src="img/pomashiny.png" width="750"&gt;
+&lt;iframe width="750" height="450" src="video/POMAShiny.mp4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen&gt;&lt;/iframe&gt;
 
 ]
 
 &lt;a href="https://github.com/pcastellanoescuder/POMAShiny"&gt;&lt;i class="fab fa-github"&gt;&lt;/i&gt;&amp;nbsp; https://github.com/pcastellanoescuder/POMAShiny&lt;/a&gt;
-
----
-
-# Video
 
 ---
 
