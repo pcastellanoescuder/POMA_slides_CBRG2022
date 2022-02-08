@@ -264,9 +264,9 @@ clean_object %>%
   PomaBoxplots(group = "features", 
                jitter = TRUE,
                legend_position = "right",
-               feature_name = c("glyceraldehyde", 
-                                "lysine", 
-                                "linolenic_acid")) #<<
+               feature_name = c("glyceraldehyde",
+                                "lysine",
+                                "linolenic_acid"))
 ```
 
 ---
