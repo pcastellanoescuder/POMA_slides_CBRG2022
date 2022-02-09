@@ -49,7 +49,8 @@ class: center, middle, inverse, title-slide
 .footnote2[
 
 Laurent Gatto, Omics Data Analysis; Chapter 8. [[Book]](https://uclouvain-cbio.github.io/WSBIM2122/sec-prot.html) &lt;/br&gt;
-Computational Biology Reading Group, Session 8. [[Project]](https://github.com/dukecct/CBRG/blob/main/inst/projects/08_project.Rmd) [[Slides]](https://github.com/dukecct/CBRG/blob/main/inst/slides/08_slides.Rmd) 
+Computational Biology Reading Group, Session 8. [[Project]](https://github.com/dukecct/CBRG/blob/main/inst/projects/08_project.Rmd) [[Slides]](https://github.com/dukecct/CBRG/blob/main/inst/slides/08_slides.Rmd) &lt;/br&gt; 
+Images by Allison Horst. [[GitHub]](https://github.com/allisonhorst) [_@allison_horst_](https://twitter.com/allison_horst)
 
 ]
 
@@ -57,11 +58,9 @@ Computational Biology Reading Group, Session 8. [[Project]](https://github.com/d
 
   3) Use Bioconductor objects directly (++ reproducibility and interoperability) &amp;#9989;
   
-&lt;/br&gt;
-
 .center[
 
-&lt;img src="img/logo.png" height="170"&gt;
+&lt;img src="img/horst-reproducibility.png" height="250"&gt;
 
 ]
 
@@ -96,7 +95,7 @@ Computational Biology Reading Group, Session 8. [[Project]](https://github.com/d
 
 ```r
 # create SummarizedExperiment object from data frames
-my_sum_exp &lt;- PomaSummarizedExperiment(tatget = "target", 
+my_sum_exp &lt;- PomaSummarizedExperiment(target = "target", 
                                        features = "features")
 ```
 
@@ -195,7 +194,7 @@ A "clean" `SummarizedExperiment` object (without sample outliers)
 
 
 ```r
-clean_object[, clean_object$group %in% c("CRC", "Healthy")]
+*clean_object[, clean_object$group %in% c("CRC", "Healthy")]
 ```
 
 
@@ -305,6 +304,49 @@ clean_object %&gt;%
 
 ---
 
+# Adding more `colData` variables!
+
+
+
+
+```r
+clean_object %&gt;%
+  SummarizedExperiment::colData()
+```
+
+
+```
+#&gt; DataFrame with 140 rows and 5 columns
+#&gt;               group       age   gender  smoking  alcohol
+#&gt;            &lt;factor&gt; &lt;numeric&gt; &lt;factor&gt; &lt;factor&gt; &lt;factor&gt;
+#&gt; sample_109      CRC        45        1        0        2
+#&gt; sample_11       CRC        56        1        1        1
+#&gt; sample_115      CRC        53        0        0        2
+#&gt; sample_12       CRC        55        1        0        2
+#&gt; sample_122      CRC        55        0        1        1
+#&gt; ...             ...       ...      ...      ...      ...
+#&gt; sample_78   Healthy        53        0        0        1
+#&gt; sample_79   Healthy        61        1        0        2
+#&gt; sample_87   Healthy        49        1        2        2
+#&gt; sample_88   Healthy        46        0        1        1
+#&gt; sample_98   Healthy        51        1        1        2
+```
+
+---
+
+# Adding more `colData` variables!
+
+
+```r
+clean_object %&gt;%
+* PomaHeatmap(cols = c(1, 3:5),
+              show_legend = FALSE)
+```
+
+&lt;img src="img/unnamed-chunk-21-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+
+---
+
 # Volcano plot
 
 
@@ -315,7 +357,7 @@ clean_object %&gt;%
                 labels = TRUE)
 ```
 
-&lt;img src="img/unnamed-chunk-18-1.png" width="100%" style="display: block; margin: auto;" /&gt;
+&lt;img src="img/unnamed-chunk-23-1.png" width="100%" style="display: block; margin: auto;" /&gt;
 
 ---
 
@@ -713,12 +755,13 @@ my_sum_exp %&gt;%
   
 ]
 
---
 .center[
 
-&lt;img src="img/questions.jpeg" height="250"&gt;
+&lt;img src="img/horst-starwars-hands.png" height="250"&gt;
 
 ]
+
+.center[.grey[.font80[_@allison_horst_ and _@juliesquid_]]]
 
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>

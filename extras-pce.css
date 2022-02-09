@@ -111,6 +111,10 @@ hr, .mline h1::after {
   color: white;
 }
 
+.font80 {
+  font-size: 80%;
+}
+
 .footnote2 {
   position: absolute;
   bottom: 1em;
